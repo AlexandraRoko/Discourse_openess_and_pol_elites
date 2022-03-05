@@ -14,7 +14,7 @@ PATH = "/Users/alexandrarottenkolber/Documents/02_Hertie_School/Master thesis/Ma
 RAW_XML = PATH + "originals/"
 
 # output directory
-RAW_TXT = PATH + "output/"
+RAW_TXT = PATH + "output/00_xml_to_text"
 
 if not os.path.exists(RAW_TXT):
     os.makedirs(RAW_TXT)
@@ -31,22 +31,23 @@ for electoral_term_folder in sorted(os.listdir(RAW_XML)):
         continue
 
     elif electoral_term_folder in [
-        "pp03-data",
-        "pp04-data",
-        "pp05-data",
-        "pp06-data",
-        "pp07-data",
-        "pp08-data",
-        "pp09-data",
-        "pp10-data",
-        "pp11-data",
-        "pp12-data",
-        "pp13-data",
-        "pp14-data",
-        "pp15-data",
-        "pp16-data",
-        "pp17-data",
-        "pp18-data",
+        #"pp03-data",
+        #"pp04-data",
+        #"pp05-data",
+        #"pp06-data",
+        #"pp07-data",
+        #"pp08-data",
+        #"pp09-data",
+        #"pp10-data",
+        #"pp11-data",
+        #"pp12-data",
+        #"pp13-data",
+        #"pp14-data",
+        #"pp15-data",
+        #"pp16-data",
+        #"pp17-data",
+        #"pp18-data",
+        "pp19-data"
     ]:
         begin_pattern_electoral_term = regex.compile(
             r"Beginn?:?\s?(\d){1,2}(\s?[.,]\s?(\d){1,2})?\s?Uhr"
@@ -57,7 +58,8 @@ for electoral_term_folder in sorted(os.listdir(RAW_XML)):
         )
 
     else:
-        raise ValueError("How did I come here?")
+        #raise ValueError("How did I come here?")
+        continue
 
     if len(sys.argv) > 1:
         print(sys.argv)
