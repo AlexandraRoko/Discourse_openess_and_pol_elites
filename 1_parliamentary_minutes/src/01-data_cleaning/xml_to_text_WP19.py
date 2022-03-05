@@ -1,28 +1,28 @@
-## ------------------------------------------------------------------------
-## Script name: missing_pages.R
-## Purpose of script: To identify pages that are missing from probate
-## Dependencies: None
-## Author: Naomi Muggleton
-## Date created: 18/08/2021
-## Date last modified: 18/08/2021
-## ------------------------------------------------------------------------
+'''
+------------------------------------------------------------------------
+Script name: xml_to_text.py
+Purpose of script: parliamentary minutes of WP 19 to text
+Dependencies: None
+Author: Alexandra Rottenkolber based on code from open-discourse
+Date created: 05.03.2022
+Date last modified:
+------------------------------------------------------------------------
+'''
 
-
-import od_lib.definitions.path_definitions as path_definitions
 import xml.etree.ElementTree as et
 import os
 import regex
 
+PATH = "/Users/alexandrarottenkolber/Documents/02_Hertie_School/Master thesis/Master_Thesis_Hertie/data_analysis/01_data/Plenarprotokolle/"
+
 # input directory
-ELECTORAL_TERM_19_INPUT = path_definitions.ELECTORAL_TERM_19_STAGE_01
+ELECTORAL_TERM_19_INPUT = PATH + "originals/pp19-data/"
 
 # output directory
-ELECTORAL_TERM_19_OUTPUT = path_definitions.ELECTORAL_TERM_19_STAGE_02
+ELECTORAL_TERM_19_OUTPUT = PATH + "output/"
 
 
 for xml_file in sorted(os.listdir(ELECTORAL_TERM_19_INPUT)):
-
-    print(xml_file)
 
     save_path = os.path.join(
         ELECTORAL_TERM_19_OUTPUT, regex.search(r"\d+", xml_file).group()
@@ -41,6 +41,7 @@ for xml_file in sorted(os.listdir(ELECTORAL_TERM_19_INPUT)):
         os.makedirs(save_path)
 
     # save to xmls
+
     toc.write(
         os.path.join(save_path, "toc.xml"), encoding="UTF-8", xml_declaration=True
     )
