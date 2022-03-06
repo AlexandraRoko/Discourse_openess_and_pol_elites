@@ -1,9 +1,9 @@
 '''
 ------------------------------------------------------------------------
-Script name: 02_extract_speeches_from_txt.py
-Purpose of script: parliamentary minutes of WP 19 to text
-Dependencies: 01_xml_to_text.py
-Author: Alexandra Rottenkolber based on code from open-discourse (script 01_extract_speeches.py)
+Script name: 04_cleaning_speeches.py
+Purpose of script: clean text in speeches
+Dependencies: 02_extract_speeches_from_text.py, 03_fractions.py
+Author: Alexandra Rottenkolber based on code from open-discourse (script 02_clean_speeches.py)
 Date created: 05.03.2022
 Date last modified:
 ------------------------------------------------------------------------
@@ -28,7 +28,6 @@ SPEECH_CONTENT_OUTPUT = path_definitions.SPEECH_CONTENT_STAGE_02
 
 
 PATH = "/Users/alexandrarottenkolber/Documents/02_Hertie_School/Master thesis/Master_Thesis_Hertie/data_analysis/01_data/Plenarprotokolle/"
-
 
 # input directory
 SPEECH_CONTENT_INPUT = PATH + "output/01_speeches/stage_1"
