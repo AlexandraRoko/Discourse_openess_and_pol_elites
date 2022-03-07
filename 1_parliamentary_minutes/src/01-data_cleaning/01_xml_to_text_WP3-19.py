@@ -11,7 +11,7 @@ from helper_functions import clean
 PATH = "/Users/alexandrarottenkolber/Documents/02_Hertie_School/Master thesis/Master_Thesis_Hertie/data_analysis/01_data/Plenarprotokolle/"
 
 # input directory
-RAW_XML = PATH + "originals/"
+RAW_XML = PATH + "originals/minutes/"
 
 # output directory
 RAW_TXT = PATH + "output/00_xml_to_text"

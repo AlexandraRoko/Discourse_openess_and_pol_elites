@@ -8,11 +8,6 @@ import regex
 PATH = "/Users/alexandrarottenkolber/Documents/02_Hertie_School/Master thesis/Master_Thesis_Hertie/data_analysis/01_data/Plenarprotokolle/"
 
 # input directory
-SPEECH_CONTENT_INPUT = PATH + "output/01_speeches/stage_2"
-DATA_FINAL = PATH + "output/XX_finals" #
-
-
-# input directory
 SPEECH_CONTENT_INPUT = PATH + "output/01_speeches/stage_3"
 
 # output directory
@@ -31,11 +26,11 @@ contributions_simplified = pd.DataFrame(
 
 # Go through all electoral_term folders
 for electoral_term_folder in sorted(os.listdir(SPEECH_CONTENT_INPUT)):
-    if "electoral_term" not in electoral_term_folder:
+    if "pp" not in electoral_term_folder:
         continue
     if len(sys.argv) > 1:
         if (
-            str(int(regex.sub("electoral_term_", "", electoral_term_folder)))
+            str(int(regex.sub("-data", "", regex.sub("pp", "", electoral_term_folder))))
             not in sys.argv
         ):
             continue
@@ -125,3 +120,6 @@ for electoral_term_folder in sorted(os.listdir(SPEECH_CONTENT_INPUT)):
 contributions_simplified.to_pickle(
     os.path.join(CONTRIBUTIONS_SIMPLIFIED, "contributions_simplified.pkl")
 )
+
+
+
