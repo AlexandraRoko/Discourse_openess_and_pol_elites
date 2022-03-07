@@ -19,13 +19,6 @@ import regex
 # Disabling pandas warnings.
 pd.options.mode.chained_assignment = None
 
-# input directory
-SPEECH_CONTENT_INPUT = path_definitions.SPEECH_CONTENT_STAGE_01
-FACTIONS = path_definitions.DATA_FINAL
-
-# output directory
-SPEECH_CONTENT_OUTPUT = path_definitions.SPEECH_CONTENT_STAGE_02
-
 
 PATH = "/Users/alexandrarottenkolber/Documents/02_Hertie_School/Master thesis/Master_Thesis_Hertie/data_analysis/01_data/Plenarprotokolle/"
 

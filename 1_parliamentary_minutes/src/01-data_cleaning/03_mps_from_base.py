@@ -25,7 +25,7 @@ PATH = "/Users/alexandrarottenkolber/Documents/02_Hertie_School/Master thesis/Ma
 MP_BASE_DATA = PATH + "originals/MdB-Stammdaten-data/MDB_STAMMDATEN.XML"
 
 # output directory
-POLITICIANS_STAGE_01 = PATH + "output/02_politicians"
+POLITICIANS_STAGE_01 = PATH + "output/02_politicians/stage_1"
 save_path = os.path.join(POLITICIANS_STAGE_01, "mps.pkl")
 
 
