@@ -141,5 +141,14 @@ final_data_df <- distinct(final_data_df)
 ## export data
 save(final_data_df, file = "./01_data/Wikipedia/output/wikimeasures_df_with_time_dim.RData")
 
+load(file = "./01_data/Wikipedia/output/wikimeasures_df_with_time_dim.RData")
+colnames(final_data_df)
+
+
+
+
+time_constrained <- subset(final_data_df, final_data_df$YEAR >= 2015)
+length(unique(final_data_df$wikidataid))
+
 
 

@@ -4,8 +4,9 @@ import time
 import json
 import random
 
+PATH = "/Users/alexandrarottenkolber/Documents/02_Hertie_School/Master thesis/Master_Thesis_Hertie/data_analysis/01_data/Plenarprotokolle/"
 
-with open('../../../../../01_data/Plenarprotokolle/processed/data_ready_concat_POSTag_all_sorted.txt', 'r') as infile:
+with open(PATH + 'processed/data_ready_concat_POSTag_all_sorted_with_AfD.txt', 'r') as infile:
     data_ready_concat = json.load(infile)
 infile.close()
 
@@ -65,6 +66,6 @@ for num_topics in [100]:
     print(f'Time taken : {(time.time() - start_time) / 60:.2f} mins for num_topics = {num_topics}')
 
     # Save model to disk.
-    lda_model.save(f"../../../../../01_data/Plenarprotokolle/LDA_models/models/lda_model_concat_POSTag_self_tuned_all_sorted_shuffle_num_topics_{num_topics}")
+    lda_model.save(PATH + f"LDA_models/models/lda_model_concat_POSTag_self_tuned_all_sorted_shuffle_num_topics_{num_topics}_with_Afd")
 
     print(f"Model {num_topics} saved. DONE.")

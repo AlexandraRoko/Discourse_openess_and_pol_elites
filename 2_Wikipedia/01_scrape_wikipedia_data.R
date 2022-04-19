@@ -18,10 +18,13 @@ relevant_MPs <- data.frame(semi_join(x = get_core(legislature = "deu"),
                                      y = filter(get_political(legislature = "deu"), (session >=12 & session <=19)), 
                                      by = "pageid"))
 
+colnames(relevant_MPs)
+
 # Parties
 Parties <- data.frame(semi_join(x = select(get_political(legislature = "deu"), pageid, party, session, service),
                                 y = filter(get_political(legislature = "deu"), (session >=12 & session <=19)), 
                                 by = "pageid"))
+
 
 # Offices
 Offices <- get_office(legislature = "deu")
@@ -84,6 +87,8 @@ MPs_and_parties <- relevant_MPs[, c("pageid", "wikidataid")] %>%
   merge(Offices_sub, by = "wikidataid", all.x = TRUE) 
 
 save(MPs_and_parties, file = "./01_data/Wikipedia/output/MP2Party_CLD.RData")
+
+load(file = "./01_data/Wikipedia/output/MP2Party_CLD.RData")
 
 unique(MPs_and_parties$party)
 # write.csv2(relevant_MPs, "./data/relevant_MPs.csv", row.names = FALSE)
