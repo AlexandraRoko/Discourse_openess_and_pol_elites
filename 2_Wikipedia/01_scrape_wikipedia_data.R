@@ -18,10 +18,78 @@ relevant_MPs <- data.frame(semi_join(x = get_core(legislature = "deu"),
                                      y = filter(get_political(legislature = "deu"), (session >=12 & session <=19)), 
                                      by = "pageid"))
 
+# Parties
+Parties <- data.frame(semi_join(x = select(get_political(legislature = "deu"), pageid, party, session, service),
+                                y = filter(get_political(legislature = "deu"), (session >=12 & session <=19)), 
+                                by = "pageid"))
+
+# Offices
+Offices <- get_office(legislature = "deu")
+colnames(Offices)
+
+cols_names <- c("wikidataid",
+                "bundesminister",
+                #"chairman_of_the_cdu.csu_bundestag_fraction",
+#"chairman_of_the_social_democratic_party",
+"federal_chancellor_of_germany",
+# "federal_minister_for_economic_affairs_and_energy",
+# "federal_minister_for_foreign_affairs",
+# "federal_minister_for_special_affairs_of_germany",
+# "federal_minister_for_the_environment._nature_conservation_and_nuclear_safety",
+# "federal_minister_for_the_treasury",
+# "federal_minister_of_defence",
+# "federal_minister_of_economic_cooperation_and_development",
+# "federal_minister_of_economics_and_technology",
+# "federal_minister_of_education_and_research",
+# "federal_minister_of_family_affairs._senior_citizens._women_and_youth",
+# "federal_minister_of_finance",
+# "federal_minister_of_food_and_agriculture",
+# "federal_minister_of_health",
+# "federal_minister_of_justice",
+# "federal_minister_of_justice_and_consumer_protection",
+# "federal_minister_of_labour_and_social_affairs",
+# "federal_minister_of_the_interior",
+# "federal_minister_of_transport_and_digital_infrastructure",
+# "federal_minister_of_transportation",
+# "federal_ministry_for_economic_cooperation_and_development",
+# "federal_ministry_of_displaced_persons._refugees_and_war_victims",
+# "federal_ministry_of_education_and_research",
+# "federal_ministry_of_family_affairs._senior_citizens._women_and_youth",
+# "federal_ministry_of_finance",
+# "federal_ministry_of_food._agriculture_and_consumer_protection",
+# "federal_ministry_of_justice",
+# "federal_ministry_of_transport_and_digital_infrastructure",
+"member_of_parliament",
+"member_of_the_german_bundestag",
+"president_of_the_bundestag",
+"secretary_of_state",
+#"minister",
+# "party_leader",
+"president",
+"president_by_age",
+"president_of_germany",
+"president_of_the_bundestag"#,
+# "transport_minister",
+# "vice.chancellor_of_germany",
+# "vice_president_of_the_bundestag")
+)
+
+Offices_sub <- Offices[, cols_names]
+
+colnames(Offices_sub)
+
+Parties <- subset(Parties, (Parties$session >= 12 & Parties$session <= 19))
+MPs_and_parties <- relevant_MPs[, c("pageid", "wikidataid")] %>% 
+  merge(Parties, by = "pageid", all.x = TRUE) %>% 
+  merge(Offices_sub, by = "wikidataid", all.x = TRUE) 
+
+save(MPs_and_parties, file = "./01_data/Wikipedia/output/MP2Party_CLD.RData")
+
+unique(MPs_and_parties$party)
 # write.csv2(relevant_MPs, "./data/relevant_MPs.csv", row.names = FALSE)
 
 ## Import politicians entities --------------------------
-relevant_MPs <- read_csv2("./data/relevant_MPs.csv")
+relevant_MPs <- read_csv2("./01_data/Wikipedia/relevant_MPs.csv")
 relevant_MPs$id_raw <- str_extract(relevant_MPs$wikidataid, "Q[[:digit:]]+$")
 relevant_MPs$id_query <- paste("wd:",str_extract(relevant_MPs$wikidataid, "Q[[:digit:]]+$"), sep = "")
 colnames(relevant_MPs)
@@ -37,14 +105,14 @@ id_ls <- as.list(relevant_MPs$id_query)
 
 # Run Wikidata SPARQL query (see wikidata_query_German_politicans_Wiki_URL.rtf, wikidata_query_language_editions_per_german_politician.rtf); https://query.wikidata.org/
 ## Import wikidata query results --------------------------
-url_query <- read_delim("./data/raw-data/wikidata_query_German_politicans_Wiki_URL.csv", delim = ",")
+url_query <- read_delim("./01_data/Wikipedia/raw-data/wikidata_query_German_politicans_Wiki_URL.csv", delim = ",")
 url_query$id_raw <- str_extract(url_query$politician, "Q[[:digit:]]+$")
 sum(is.na(url_query$id_raw))
 
 lang_ed<- rbind(
-  read_delim("./data/raw-data/query_lang_ed_batch_1.csv", delim = ","), 
-  read_delim("./data/raw-data/query_lang_ed_batch_2.csv", delim = ","), 
-  read_delim("./data/raw-data/query_lang_ed_batch_3.csv", delim = ",")
+  read_delim("./01_data/Wikipedia/raw-data/query_lang_ed_batch_1.csv", delim = ","), 
+  read_delim("./01_data/Wikipedia/raw-data/query_lang_ed_batch_2.csv", delim = ","), 
+  read_delim("./01_data/Wikipedia/raw-data/query_lang_ed_batch_3.csv", delim = ",")
   )
 
 lang_ed$id_raw <- str_extract(lang_ed$item, "Q[[:digit:]]+$")
@@ -79,20 +147,27 @@ sum(is.na(MP_data$no_lang_ed))
 # find missing language editions 
 MP_data$id_raw[is.na(MP_data$no_lang_ed)]
 
-# asssign missing language editions (manual lookup)
+# assign missing language editions (manual lookup)
 MP_data$no_lang_ed[MP_data$name == "Willy Brandt"] <- 95
 MP_data$no_lang_ed[MP_data$name == "Stephan Pilsinger"] <- 3
+
+colnames(MP_data)
 
 
 ## download Wikidata PageRank data -------------
 # source: http://people.aifb.kit.edu/ath/ 
 # data downloaded from: https://danker.s3.amazonaws.com/index.html
-wikidata_pagerank_df <- read_tsv("./data/raw-data/2020-11-14.allwiki.links.rank", 
+wikidata_pagerank_df <- read_tsv("./01_data/Wikipedia/raw-data/2020-11-14.allwiki.links.rank", 
                                  col_names = c("id_raw", "pageRankGlobalALL"))
 MP_data <- left_join(x = MP_data, 
                      y = wikidata_pagerank_df[c("pageRankGlobalALL", "id_raw")], 
                      by = "id_raw")
 sum(is.na(wikidata_pagerank_df$pageRankGlobalALL))
+
+colnames(MP_data)
+#[1] "country"           "pageid"            "wikidataid"        "wikititle"         "name"              "sex"               "ethnicity"         "religion"         
+#[9] "birth"             "death"             "birthplace"        "deathplace"        "id_raw"            "id_query"          "wikiurl"           "no_lang_ed"       
+#[17] "pageRankGlobalALL"
 
 # save results
 save(MP_data, file = "./data/output/MP_data.RData")

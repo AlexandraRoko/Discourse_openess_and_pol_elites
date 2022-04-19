@@ -2,11 +2,14 @@
 ### Simon Munzert
 
 ## load packages and functions -------------------------------
-source("_packages.r")
-source("_functions.r")
+source("/Users/alexandrarottenkolber/Documents/02_Hertie_School/Master thesis/Master_Thesis_Hertie/prominence-code_Simon_AR/_packages.r")
+source("/Users/alexandrarottenkolber/Documents/02_Hertie_School/Master thesis/Master_Thesis_Hertie/prominence-code_Simon_AR/_functions.r")
+
+
+setwd("/Users/alexandrarottenkolber/Documents/02_Hertie_School/Master thesis/Master_Thesis_Hertie/data_analysis")
 
 ## load data ----------------------------------------------
-load("./data/output/wikimeasures_df.RData")
+load("./01_data/Wikipedia/output/wikimeasures_df.RData")
 
 
 # get variable labels
@@ -26,17 +29,32 @@ wikimeasures_df_fa <- log(wikimeasures_df_fa)
 wikimeasures_df <- wikimeasures_df[flag_completes,]
 
 # export factor variable dataset
-save(wikimeasures_df_fa, file = "./data/output/wikimeasures_df_fa.RData")
+#save(wikimeasures_df_fa, file = "./data/output/wikimeasures_df_fa.RData")
 
+## Labels for data
+table1::label(wikimeasures_df_fa$article_size) <- "Wikipeida article size"
+table1::label(wikimeasures_df_fa$editors) <- "Number of editors" 
+table1::label(wikimeasures_df_fa$no_lang_ed) <- "Number of language editions" 
+table1::label(wikimeasures_df_fa$pagerank) <- "Pagerank" 
+table1::label(wikimeasures_df_fa$pageRankGlobalALL) <- "Pagerank Global" 
+table1::label(wikimeasures_df_fa$pageviews_avg) <- "Average page views"
+table1::label(wikimeasures_df_fa$revisions) <- "Number of revisions"
 
 
 ## explore correlation matrix of indicators ---------------------
-
 # plot correlation between variables
-pdf(file="./figures/corrplot.pdf", height=6, width=7, family="URWTimes")
+pdf(file="./03_figures/corrplot_with_labels.pdf", height=6, width=7, family="URWTimes")
 par(oma=c(0,1,0,0) + .2)
 par(mar=c(3, 1, 0, 0))
 dat <- wikimeasures_df_fa
+colnames(dat)
+colnames(dat) <- c("Wikipeida article size", 
+                   "Average page views", 
+                   "Number of revisions",
+                   "Number of editors", 
+                   "Pagerank",
+                   "Pagerank Global", 
+                   "Number of language editions")
 corrplot::corrplot(cor(dat), 
                    order = "alphabet", 
                    method = "circle", 
@@ -46,11 +64,12 @@ corrplot::corrplot(cor(dat),
                    p.mat = cor(dat), 
                    insig = "p-value", 
                    sig.level=-1, 
-                   color="white", 
+                   #color="white", 
                    tl.srt = 45, 
                    tl.offset = 0.5, 
                    addCoef.col = "white", 
                    cl.lim = c(0,1)) 
+
 dev.off()
 
 
@@ -59,8 +78,11 @@ dev.off()
 ### CONVENTIONAL FACTOR ANALYSIS --------------
 
 ## one-factor solution ---------------------
-fact <- fa(wikimeasures_df_fa, nfactors = 1, rotate = "promax", scores = "regression", fm = "ml")
+fact1 <- fa(wikimeasures_df_fa, nfactors = 1, rotate = "promax", scores = "regression", fm = "ml")
 print(fact, cut = 0, digits = 3, sort = TRUE)
+
+apply(fact1$loadings^2,1,sum) # communality => is high in a good model
+1 - apply(fact1$loadings^2,1,sum) # uniqueness => is low in a good model
 
 # generate factor scores
 wikimeasures_df$fa_importance <- factor.scores(wikimeasures_df_fa, fact, method = "tenBerge")$scores[,1] # ten Berge factor scores preserve correlation between factors for oblique solution
@@ -70,8 +92,23 @@ wikimeasures_df$fa_importance_rank <- rank(-wikimeasures_df$fa_importance, ties.
 
 
 ## two-factor solution ---------------------
-fact <- fa(wikimeasures_df_fa, nfactors = 2, rotate = "promax", scores = "regression", fm = "ml")
-print(fact, cut = 0, digits = 3, sort = TRUE)
+fact2 <- fa(wikimeasures_df_fa, nfactors = 2, rotate = "promax", scores = "regression", fm = "ml")
+print(fact2, cut = 0, digits = 3, sort = TRUE)
+
+#fact2 <- fa(wikimeasures_df_fa, nfactors = 2, rotate = "promax", scores = "regression", fm = "minres")
+#print(fact2, cut = 0, digits = 3, sort = TRUE)
+
+#fact3 <- fa(wikimeasures_df_fa, nfactors = 2, rotate = "promax", scores = "regression", fm = "pa")
+#print(fact3, cut = 0, digits = 3, sort = TRUE)
+
+#?fa
+
+apply(fact2$loadings^2,1,sum) # communality => is high in a good model
+1 - apply(fact2$loadings^2,1,sum) # uniqueness => is low in a good model
+
+#comparison with own model
+apply(wikimeasures_df_fa.fa2$loadings^2,1,sum) # communality => a good model: high values for communality, low values for uniqueness
+1 - apply(wikimeasures_df_fa.fa2$loadings^2,1,sum) # uniqueness
 
 # generate factor scores
 wikimeasures_df$fa_prominence <- factor.scores(wikimeasures_df_fa, fact, method = "tenBerge")$scores[,1] # ten Berge factor scores preserve correlation between factors for oblique solution
@@ -123,7 +160,7 @@ dplyr::select(wikimeasures_df, fa_1_rank, fa_2_rank, fa_3_rank) %>% arrange(fa_3
 ## explore dimensionality ---------------------
 
 # scree plot to determine the adequate number of dimensions
-pdf(file="./figures/screeplot.pdf", height=3, width=6, family="URWTimes")
+pdf(file="./03_figures/screeplot.pdf", height=3, width=6, family="URWTimes")
 par(oma=c(0,0,0,0) + .7)
 par(mar=c(4, 4, 0, 0))
 fa.parallel.refined(wikimeasures_df_fa, fa = "fa", ylabel = "Eigenvalue", xlabel = "Factor number", main = "", sim = FALSE, show.legend = FALSE, fm = "ml")
@@ -161,7 +198,18 @@ head(dat)
 rownames(dat) <- c("1 factor", "2 factors", "3 factors")
 cols_align <- c("l", rep("r", ncol(dat)))
 
-print(xtable(dat, align = cols_align, digits = 2, caption = "Model fit statistics for various factor specifications.\\label{tab:modelfit}"), booktabs = TRUE, size = "normalsize", caption.placement = "top", table.placement = "h!t", include.rownames=TRUE, include.colnames = TRUE, sanitize.text.function = identity, file = "../figures/modelfit-factors.tex")
+print(xtable(dat, 
+             align = cols_align, 
+             digits = 2, 
+             caption = "Model fit statistics for various factor specifications.\\label{tab:modelfit}"), 
+      booktabs = TRUE, 
+      size = "normalsize", 
+      caption.placement = "top", 
+      table.placement = "h!t", 
+      include.rownames=TRUE, 
+      include.colnames = TRUE, 
+      sanitize.text.function = identity, 
+      file = "./03_figures/modelfit-factors.tex")
 
 
 
@@ -195,8 +243,8 @@ if(file.exists("./data/output/factorMCMC.rda")){
                                parameters.to.save = c("lambda1", "lambda2","phi", "factor"),
                                n.chains = 3,
                                n.burnin = 2000,
-                               n.iter = 5000)
-  save(factor_mcmc, file = "./data/output/factor_analysis/factorMCMC.rda")
+                               n.iter = 10000)
+  save(factor_mcmc, file = "./01_data/Wikipedia/output/factor_analysis/factorMCMC.rda")
 }
 #plot(factor_mcmc)
 #traceplot(factor_mcmc)
@@ -233,12 +281,12 @@ factor_mcmc_sum_df <- factor_mcmc_sum_df[parameter_names,]
 factor_mcmc_sims_df <- factor_mcmc_sims_df[,parameter_names] 
 
 # export data
-save(factor_mcmc_sims_df, file = "./data/output/factor_analysis/factorMCMCsimsdf.rda")
-save(factor_mcmc_sum_df, file = "./data/output/factor_analysis/factorMCMCsumdf.rda")
+save(factor_mcmc_sims_df, file = "./01_data/Wikipedia/output/factor_analysis/factorMCMCsimsdf.rda")
+save(factor_mcmc_sum_df, file = "./01_data/Wikipedia/output/factor_analysis/factorMCMCsumdf.rda")
 
 
 # plot Rhat values
-pdf(file="./figures/model_rhat.pdf", height=5, width=8, family="URWTimes")
+pdf(file="./03_figures/model_rhat.pdf", height=5, width=8, family="URWTimes")
 par(oma=c(0,0,0,0) + .7)
 par(mar=c(4,4,0,0))
 hist(factor_mcmc_sum_df_full$Rhat, main = "", xlab = "Rhat value")
@@ -249,7 +297,7 @@ dev.off()
 traceplot_sims <- factor_mcmc_sims_df[,str_detect(colnames(factor_mcmc_sims_df), "lambda|phi")]
 traceplot_sims <- select(traceplot_sims, -`lambda1[5]`, -`lambda2[1]`)
 
-pdf(file="./figures/model_traceplots.pdf", height=10, width=7, family="URWTimes")
+pdf(file="./03_figures/model_traceplots.pdf", height=10, width=7, family="URWTimes")
 par(oma=c(0,0,0,0) + .7)
 par(mar=c(2,2,2,2))
 par(mfrow = c(5, 3))
@@ -270,7 +318,7 @@ samples2 <- 45038 + samples
 #traceplot_sims <- traceplot_sims[, cols]
 
 
-pdf(file="./figures/model_traceplots2.pdf", height=10, width=7, family="URWTimes")
+pdf(file="./03_figures/model_traceplots2.pdf", height=10, width=7, family="URWTimes")
 par(oma=c(0,0,0,0) + .7)
 par(mar=c(2,2,2,2))
 par(mfrow = c(5, 3))
@@ -286,8 +334,8 @@ dev.off()
 ### POSTESTIMATION --------
 
 # load estimates
-load("./data/output/factor_analysis/factorMCMCsimsdf.rda")
-load("./data/output/factor_analysis/factorMCMCsumdf.rda")
+load("./01_data/Wikipedia/output/factor_analysis/factorMCMCsimsdf.rda")
+load("./01_data/Wikipedia/output/factor_analysis/factorMCMCsumdf.rda")
 
 # build result vectors
 loadings <- factor_mcmc_sum_df[str_detect(rownames(factor_mcmc_sum_df), "lambda"),] %>% as.data.frame(stringsAsFactors = FALSE)
@@ -322,7 +370,7 @@ print(xtable(loadings_df_tex,
       include.rownames = FALSE, 
       include.colnames = TRUE, 
       sanitize.text.function = identity, 
-      file = "./figures/tab-factormodel.tex")
+      file = "./03_figures/tab-factormodel.tex")
 
 
 # generate median Bayesian factor scores
@@ -347,9 +395,9 @@ skew(wikimeasures_df$bfa_prominence)
 skew(wikimeasures_df$bfa_influence)
 
 ## export dataset with factor scores ---------------------
-save(wikimeasures_df, file = "./data/wikimeasures_df_fascores.RData")
+#save(wikimeasures_df, file = "./data/wikimeasures_df_fascores.RData")
 
-
+getwd()
 
 ## generate bar graph of factor loadings ---------------------
 # code source: http://rpubs.com/danmirman/plotting_factor_analysis
@@ -375,7 +423,7 @@ loadings.m$Loading_95hi <- c(loadings_df_graph$f1_95hi, loadings_df_graph$f2_95h
 library(ggplot2)
 
 # plot
-pdf(file="./figures/factor_loadings.pdf", height=4, width=7, family="URWTimes")
+#pdf(file="./03_figures/factor_loadings.pdf", height=4, width=7, family="URWTimes")
 par(oma=c(0,0,0,0) + .7)
 par(mar=c(.5, .5,.5,.5))
 ggplot(loadings.m, aes(Variable, abs(Loading), fill = Loading)) + 
@@ -393,12 +441,12 @@ ggplot(loadings.m, aes(Variable, abs(Loading), fill = Loading)) +
   xlab("") + # improve y-axis label
   scale_y_continuous(breaks=seq(0,1.1,.2)) +
   theme_bw(base_size=12) # use a black-and-white theme with set font size
-dev.off()
+#dev.off()
 
 
 ## visualize factor scores a.k.a. plotting subjects in latent variable space ---------
 
-pdf(file="./figures/factor_scores_prominence_influence.pdf", height=5, width=8, family="URWTimes")
+pdf(file="./03_figures/factor_scores_prominence_influence.pdf", height=5, width=8, family="URWTimes")
 par(oma=c(0,0,0,0) + .7)
 par(mar=c(.5, .5,.5,.5))
 # prepare labels
@@ -429,5 +477,6 @@ ggplot(wikimeasures_df, aes(bfa_prominence, bfa_influence)) +
 dev.off()
 
 
+colnames(dat)
 
 

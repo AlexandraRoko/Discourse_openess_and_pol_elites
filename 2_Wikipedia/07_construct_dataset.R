@@ -10,7 +10,7 @@ getwd()
 setwd("/Users/alexandrarottenkolber/Documents/02_Hertie_School/Master thesis/Master_Thesis_Hertie/data_analysis")
 
 ## import Wikidata database ----------
-load("./data/output/MP_data.RData")
+load("./01_data/Wikipedia/output/MP_data.RData")
 
 nrow(MP_data)
 names(MP_data)
@@ -18,7 +18,7 @@ MP_data$pageRank <- NULL
 MP_data$positions <- NULL
 
 ## import page statistics -----#
-load("./data/output/pageStatistics_df_complete.RData")
+load("./01_data/Wikipedia/output/pageStatistics_df_complete.RData")
 nrow(page_info_statistics_df_complete)
 names(page_info_statistics_df_complete)
 nrow(page_prose_statistics_df_complete)
@@ -43,21 +43,21 @@ MP_data$wikiurl_basename <- basename(MP_data$wikiurl)
 
 
 ## import pageviews data -----
-load("./data/output/pageviews_average_2017.RData")
+load("./01_data/Wikipedia/output/pageviews_average_2017.RData")
 nrow(pageviews_df)
 names(pageviews_df)
 pageviews_df$page_url <- str_replace(pageviews_df$wikiurl_basename, ".csv$", "")
 pageviews_df$wikiurl_basename <- NULL
 
 ## import pages data -----
-load("./data/output/wikipages_df.RData")
+load("./01_data/Wikipedia/output/wikipages_df.RData")
 nrow(wikipages_df)
 names(wikipages_df)
 wikipages_df$page_url <- wikipages_df$article_name
 wikipages_df$article_name <- NULL
 
 ## import wikipedia graph data -----
-load("./data/output/wikiGraph.RData")
+load("./01_data/Wikipedia/output/wikiGraph.RData")
 
 
 ## compute pageRank ----------
@@ -76,6 +76,8 @@ wikimeasures_df <- MP_data %>% merge(page_info_statistics_df_complete, by.x = "w
   merge(wikipages_df, by.x = "wikiurl_basename", by.y = "page_url", all.x = TRUE) %>% 
   merge(pagerank_df, by.x = "wikiurl_basename", by.y = "page_url", all.x = TRUE)
 
+
+colnames(wikimeasures_df)
 
 ## export data
 save(wikimeasures_df, file = "./data/output/wikimeasures_df.RData")

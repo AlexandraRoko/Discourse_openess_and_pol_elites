@@ -58,13 +58,14 @@ page_info_statistics_list <- list()
 
 #page_info_statistics_list_full <- page_info_statistics_list[sapply(page_info_statistics_list, class) == "character"]
 
-load(paste0("./data/output/pageStatistics_pulled", ".RData"))
+load(paste0("./01_data/Wikipedia/output/pageStatistics_pulled", ".RData"))
+
 
 page_info_statistics_list_full <- list()
 page_prose_statistics_list_full <- list()
 
 for (i in 1:1) {
-  load(paste0("./data/output/pageStatistics_pulled", ".RData"))
+  load(paste0("./01_data/Wikipedia/output/pageStatistics_pulled", ".RData"))
   page_info_statistics_list_full[[i]] <- page_info_statistics_list[sapply(page_info_statistics_list, class) == "character"]
   page_prose_statistics_list_full[[i]] <- page_prose_statistics_list[sapply(page_prose_statistics_list, class) == "character"]
 }
@@ -83,6 +84,8 @@ page_prose_statistics_df <- ldply(page_prose_statistics_df_list, data.frame)
 page_info_statistics_df <- distinct(page_info_statistics_df, page, .keep_all = TRUE)
 page_prose_statistics_df <- distinct(page_prose_statistics_df, page, .keep_all = TRUE)
 
+colnames(page_info_statistics_df)
+colnames(page_prose_statistics_df)
 
 # correct errors originated when merging
 flagged_rows <- list()
@@ -114,7 +117,7 @@ sum(is.na(page_info_statistics_df$author_editcount))
 
 #save(page_info_statistics_df, page_prose_statistics_df, file = "./data/output/pageStatistics_df.RData")
 
-load("./data/output/pageStatistics_df.RData")
+load("./01_data/Wikipedia/output/pageStatistics_df.RData")
 
 
 
@@ -142,14 +145,14 @@ for (i in 1:length(urls_basenames_missing)) {
 
 #save(page_prose_statistics_list, page_info_statistics_list, file = "./data/output/pageStatistics_missings_pulled.RData")
 
-load("./data/output/pageStatistics_missings_pulled.RData")
+load("./01_data/Wikipedia/output/pageStatistics_missings_pulled.RData")
 
 page_info_statistics_list_full <- list()
 page_prose_statistics_list_full <- list()
 
 
 for (i in 1:1) {
-  load(paste0("./data/output/pageStatistics_missings_pulled", ".RData"))
+  load(paste0("./01_data/Wikipedia/output/pageStatistics_missings_pulled", ".RData"))
   page_info_statistics_list_full[[i]] <- page_info_statistics_list[sapply(page_info_statistics_list, class) == "character"]
   page_prose_statistics_list_full[[i]] <- page_prose_statistics_list[sapply(page_prose_statistics_list, class) == "character"]
 }
@@ -199,13 +202,17 @@ sum(is.na(page_info_statistics_df_missings$author_editcount))
 
 #save(page_info_statistics_df_missings, page_prose_statistics_df_missings, file = "./data/output/pageStatistics_df_missings.RData")
 
-load("./data/output/pageStatistics_df_missings.RData")
+load("./01_data/Wikipedia/output/pageStatistics_df_missings.RData")
+
+colnames(page_info_statistics_df_missings)
+colnames(page_prose_statistics_df_missings)
 
 # combine both data sets
 
 page_info_statistics_df_complete <- rbind(page_info_statistics_df, page_info_statistics_df_missings)
 page_prose_statistics_df_complete <- rbind(page_prose_statistics_df, page_prose_statistics_df_missings)
 
+colnames(page_info_statistics_df_complete)
+colnames(page_prose_statistics_df_complete)
 
-
-save(page_info_statistics_df_complete, page_prose_statistics_df_complete, file = "./data/output/pageStatistics_df_complete.RData")
+#save(page_info_statistics_df_complete, page_prose_statistics_df_complete, file = "./01_data/Wikipedia/output/pageStatistics_df_complete.RData")
