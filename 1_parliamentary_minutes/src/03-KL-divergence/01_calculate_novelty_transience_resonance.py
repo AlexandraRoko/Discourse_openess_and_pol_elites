@@ -31,6 +31,45 @@ infile.close()
 Preparation
 '''
 
+key2Party = {}
+errors_for = []
+for i in range(len(stammd_dic['DOCUMENT']['MDB'])):
+
+    try:
+        temp_dic = {}
+        ID = stammd_dic['DOCUMENT']['MDB'][i]['ID']
+
+        if type(stammd_dic['DOCUMENT']['MDB'][i]['NAMEN']['NAME']) == list:
+
+            temp_dic["NACHNAME"] = stammd_dic['DOCUMENT']['MDB'][i]['NAMEN']['NAME'][1]['NACHNAME'].lower()
+            temp_dic["VORNAME"] = stammd_dic['DOCUMENT']['MDB'][i]['NAMEN']['NAME'][1]['VORNAME'].lower()
+
+
+        else:
+            temp_dic["NACHNAME"] = stammd_dic['DOCUMENT']['MDB'][i]['NAMEN']['NAME']['NACHNAME'].lower()
+            temp_dic["VORNAME"] = stammd_dic['DOCUMENT']['MDB'][i]['NAMEN']['NAME']['VORNAME'].lower()
+
+        temp_dic["PARTY"] = stammd_dic['DOCUMENT']['MDB'][i]["BIOGRAFISCHE_ANGABEN"]['PARTEI_KURZ']
+        # temp_dic["Year_of_birth"] = datetime.strftime(datetime.strptime(stammd_dic['DOCUMENT']['MDB'][i]["BIOGRAFISCHE_ANGABEN"]['GEBURTSDATUM'], "%d.%m.%Y"), "%Y")
+        temp_dic["BORN"] = datetime.strptime(stammd_dic['DOCUMENT']['MDB'][i]["BIOGRAFISCHE_ANGABEN"]['GEBURTSDATUM'],
+                                             "%d.%m.%Y")
+
+        WPs = []
+
+        if type(stammd_dic['DOCUMENT']['MDB'][i]["WAHLPERIODEN"]["WAHLPERIODE"]) == list:
+            for w in range(len(stammd_dic['DOCUMENT']['MDB'][i]["WAHLPERIODEN"]["WAHLPERIODE"])):
+                WPs.append(int(stammd_dic['DOCUMENT']['MDB'][i]["WAHLPERIODEN"]["WAHLPERIODE"][w]["WP"]))
+        else:
+            WPs.append(int(stammd_dic['DOCUMENT']['MDB'][i]["WAHLPERIODEN"]["WAHLPERIODE"]["WP"]))
+
+        # if pd.Series(WPs).min() > 11:
+
+        temp_dic["WPs"] = WPs
+        key2Party[ID] = temp_dic
+
+    except (KeyError, TypeError) as e:
+        errors_for.append(i)
+
 sorted_id2rede_12_19_keys = sorted(list(id2rede_12_19.keys()))  # [:10]
 
 dates = []
@@ -228,7 +267,6 @@ for windowsize in windowsize_list:
 
 print(f'Time taken : {(time.time() - start_time) / 60:.2f} mins')
 
-with open(PATH + 'processed/speech2KL_lda_model_concat_POSTag_self_tuned_all_sorted.txt',
 with open(PATH + 'processed/speech2KL_lda_model_concat_POSTag_self_tuned_all_sorted.txt',
           'w') as outfile:
     json.dump(speech2KL, outfile)
