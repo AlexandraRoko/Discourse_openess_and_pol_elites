@@ -1,3 +1,13 @@
+'''
+------------------------------------------------------------------------
+Script name: 02_plotting_figures.py
+Purpose of script: investigate results and polt figures
+Dependencies: 01_calculate_novelty_transience_resonance.py
+Author: Alexandra Rottenkolber
+------------------------------------------------------------------------
+'''
+
+
 from sklearn.linear_model import LinearRegression
 
 with open('../../data/written/id2speech_concat_POSTag_inshape_withThetas.txt', 'r') as infile:

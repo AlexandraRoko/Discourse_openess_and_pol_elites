@@ -1,3 +1,12 @@
+'''
+------------------------------------------------------------------------
+Script name: 01_calculate_novelty_transience_resonance.py
+Purpose of script: bring data into different shapes, calculate KL-based measures
+Dependencies: 03-train_LDA.py, 02_apply_text_processing.py
+Author: Alexandra Rottenkolber
+------------------------------------------------------------------------
+'''
+
 # packages
 import numpy as np
 import pandas as pd
