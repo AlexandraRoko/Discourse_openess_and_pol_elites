@@ -21,6 +21,7 @@ colnames(wikimeasures_df)
 #wikimeasures_df_fa <- dplyr::select(wikimeasures_df, revisions, editors, article_size, pageviews_avg, pageRankGlobalALL, pagerank, no_lang_ed, article_extlinks, articles_intlinks, unique_references)
 #wikimeasures_df_fa <- dplyr::select(wikimeasures_df, revisions, editors, characters, pageviews_avg,  pageRankGlobalALL, pagerank, no_lang_ed)
 wikimeasures_df_fa <- dplyr::select(wikimeasures_df, article_size, pageviews_avg, revisions, editors, pagerank, pageRankGlobalALL, no_lang_ed) # set as in Simons paper
+wikimeasures_df_fa <- dplyr::select(wikimeasures_df, article_size, pageviews_avg, revisions, editors, pagerank, no_lang_ed) # set as in Simons paper
 flag_completes <- complete.cases(wikimeasures_df_fa)
 table(flag_completes) # 157 non-complete cases
 wikimeasures_df_fa <- wikimeasures_df_fa[flag_completes,]
@@ -32,13 +33,14 @@ wikimeasures_df <- wikimeasures_df[flag_completes,]
 #save(wikimeasures_df_fa, file = "./data/output/wikimeasures_df_fa.RData")
 
 ## Labels for data
-table1::label(wikimeasures_df_fa$article_size) <- "Wikipeida article size"
+table1::label(wikimeasures_df_fa$article_size) <- "Article size"
 table1::label(wikimeasures_df_fa$editors) <- "Number of editors" 
 table1::label(wikimeasures_df_fa$no_lang_ed) <- "Number of language editions" 
-table1::label(wikimeasures_df_fa$pagerank) <- "Pagerank" 
-table1::label(wikimeasures_df_fa$pageRankGlobalALL) <- "Pagerank Global" 
-table1::label(wikimeasures_df_fa$pageviews_avg) <- "Average page views"
+table1::label(wikimeasures_df_fa$pagerank) <- "PageRank" 
+#::label(wikimeasures_df_fa$pageRankGlobalALL) <- "Pagerank Global" 
+table1::label(wikimeasures_df_fa$pageviews_avg) <- "Average number of page views"
 table1::label(wikimeasures_df_fa$revisions) <- "Number of revisions"
+
 
 
 ## explore correlation matrix of indicators ---------------------
@@ -48,12 +50,12 @@ par(oma=c(0,1,0,0) + .2)
 par(mar=c(3, 1, 0, 0))
 dat <- wikimeasures_df_fa
 colnames(dat)
-colnames(dat) <- c("Wikipeida article size", 
-                   "Average page views", 
+colnames(dat) <- c("Article size",
+                   "Average number of page views",
                    "Number of revisions",
-                   "Number of editors", 
-                   "Pagerank",
-                   "Pagerank Global", 
+                   "Number of editors",
+                   "PageRank",
+                   #"Pagerank Global",
                    "Number of language editions")
 corrplot::corrplot(cor(dat), 
                    order = "alphabet", 

@@ -21,10 +21,117 @@ relevant_MPs <- data.frame(semi_join(x = get_core(legislature = "deu"),
 colnames(relevant_MPs)
 
 # Parties
-Parties <- data.frame(semi_join(x = select(get_political(legislature = "deu"), pageid, party, session, service),
-                                y = filter(get_political(legislature = "deu"), (session >=12 & session <=19)), 
-                                by = "pageid"))
+# Parties <- data.frame(semi_join(x = select(legislatoR::get_political(legislature = "deu"), pageid, party, session, service),
+#                                 y = filter(legislatoR::get_political(legislature = "deu"), (session >=12 & session <=19)), 
+#                                 by = "pageid"))
 
+# Parties
+Parties <- get_political(legislature = "deu")
+
+colnames(Parties)
+
+Parties <- Parties[, c("pageid","session","party","constituency2" )]
+
+#Professions
+Professions <- get_profession(legislature = "deu")
+colnames(Professions)
+
+# grouping inspried from ISCO
+Associate_professionals_ls <- c("white.collar_worker", "social_worker", "school_teacher", "educator","teacher","pedagogue","high_school_teacher","industrial_management_assistant")
+Science_and_engeneering_profs_ls <- c("theologian","scientist","slavicist","sociologist","physicist","political_scientist", "historian",
+                                   "historian_of_the_modern_age", "ecologist", "economist", "electrical_engineer", "engineer", "academic", 
+                                   "architect", "art_historian", "biochemist", "classical_philologist", "computer_scientist" , "chemist",
+                                   "university_teacher","epidemiologist", "professor","philosopher", "mathematician", "literary_scholar","japanologist", "archivist")
+Health_profs_ls <- c("psychiatrist","psychologist", "nurse", "psychotherapist", "cardiac_surgeon", "dentist", "pharmacist","neurologist", 
+                  "pathologist", "internist","peace_researcher","pharmacologist")
+Business_pref_ls <- c( "banker", "business_consultant", "chairperson","manager", "consultant", "businessperson","lobbyist","postgraduate_business_degree_holder",
+                    "tax_advisor", "trade_unionist", "entrepreneur","intelligence_officer")
+Politics_and_Administration_ls <- c("police_officer", "statesperson","member_of_the_german_bundestag","minister", "diplomat","politician")
+Clerical_support_workers_ls <- c("catholic_priest", "pastor")
+Service_and_sales_workers_ls <- c("bank_teller", "beauty_pageant_contestant", "beekeeper", "bookseller", "butcher", "civil_servant", "diplom.merchant","tailor", 
+                               "physician","physiotherapist","merchant")
+Skilled_agricultural_forestry_fishery_workers_ls <- c("agriculturer", "assessor","pundit", "zoologist","veterinarian", "government_veterinarian", "botanist")
+law_ls <- c("judge","jurist","jurist.consultant", "justiciar","lawyer","notary","poet_lawyer")
+Elementary_occupations_ls <- c("carpenter", "house_painter","locksmith", "technician","miller","miner", "auto_mechanic")
+Armed_forces_occupations_ls <- c("career_soldier","temporary_career_soldier","soldier","generalstabsoffizier","resistance_fighter", "military_personnel","military_officer")
+Spots_ls <- c("handball_player", "artistic_gymnast", "association_football_referee", 
+           "athletics_competitor","speed_skater","sport_cyclist","singer","triathlete", "rowing_official","judoka","javelin_thrower")
+creatives_Media_ls <- c("actor", "contributing_editor", "drafter", "film_director","film_producer", 
+               "feminist","photographer","screenwriter","publisher","writer", "sculptor", "music_publisher", 
+               "non.fiction_writer","pianist","novelist", "human_rights_activist","peace_activist",  "author", "biographer", "librarian","literary_editor",
+               "television_presenter","opinion_journalist", "opinion_journalist","journalist","esperantist","translator","translators_and_interpreters"
+               )
+
+
+
+
+Professions_melted <- melt(Professions, "wikidataid", variable.name = "occupation")
+Professions_melted$occupation <- as.character(Professions_melted$occupation)
+Professions_melted <- Professions_melted[Professions_melted$value == TRUE, c("wikidataid", "occupation")]
+
+length(Professions_melted$wikidataid)
+length(unique(Professions_melted$wikidataid))
+
+
+# create classified variable
+Professions_melted <- Professions_melted %>% mutate(Associate_professionals = case_when(occupation %in% unlist(Associate_professionals_ls) ~ "yes", TRUE ~ "no")) %>%
+  mutate(Science_and_engeneering_profs = case_when(occupation %in% unlist(Science_and_engeneering_profs_ls) ~ "yes", TRUE ~ "no")) %>%
+  mutate(Health_profs = case_when(occupation %in% unlist(Health_profs_ls) ~ "yes", TRUE ~ "no")) %>%
+  mutate(Business_pref = case_when(occupation %in% unlist(Business_pref_ls) ~ "yes", TRUE ~ "no")) %>%
+  mutate(Politics_and_Administration = case_when(occupation %in% unlist(Politics_and_Administration_ls) ~ "yes", TRUE ~ "no")) %>%
+  mutate(Clerical_support_workers = case_when(occupation %in% unlist(Clerical_support_workers_ls) ~ "yes", TRUE ~ "no")) %>%
+  mutate(Service_and_sales_workers = case_when(occupation %in% unlist(Service_and_sales_workers_ls) ~ "yes", TRUE ~ "no")) %>%
+  mutate(Skilled_agricultural_forestry_fishery_workers = case_when(occupation %in% unlist(Skilled_agricultural_forestry_fishery_workers_ls) ~ "yes", TRUE ~ "no")) %>%
+  mutate(law = case_when(occupation %in% unlist(law_ls) ~ "yes", TRUE ~ "no")) %>%
+  mutate(Elementary_occupations = case_when(occupation %in% unlist(Elementary_occupations_ls) ~ "yes", TRUE ~ "no")) %>%
+  mutate(Armed_forces_occupations = case_when(occupation %in% unlist(Armed_forces_occupations_ls) ~ "yes", TRUE ~ "no")) %>%
+  mutate(Spots = case_when(occupation %in% unlist(Spots_ls) ~ "yes", TRUE ~ "no")) %>%
+  mutate(creatives_Media = case_when(occupation %in% unlist(creatives_Media_ls) ~ "yes", TRUE ~ "no"))
+
+
+Professions_melted2 <- melt(Professions_melted, "wikidataid", variable.name = "occupation2")
+Professions_melted2$occupation2 <- as.character(Professions_melted2$occupation2)
+Professions_melted2 <- Professions_melted2[Professions_melted2$value == "yes", c("wikidataid", "occupation2")]
+
+length(Professions_melted2$wikidataid)
+length(unique(Professions_melted2$wikidataid))
+
+remove_dups <- subset(Professions_melted2, duplicated(Professions_melted2$wikidataid))
+remove_dups<-remove_dups[!(remove_dups$occupation2=="Politics_and_Administration"),]
+remove_dups <- distinct(remove_dups)
+
+Professions_melted3 <- Professions_melted2 %>% 
+  merge(remove_dups, by = "wikidataid", all.x = TRUE) 
+
+
+Professions_melted3$occupation <- ifelse(!is.na(Professions_melted3$occupation2.y), Professions_melted3$occupation2.y, Professions_melted3$occupation2.x)
+Professions_melted3$occupation2.x <- NULL
+Professions_melted3$occupation2.y <- NULL
+
+Professions_melted3 <- distinct(Professions_melted3)
+
+length(unique(Professions_melted3$wikidataid))
+length((Professions_melted3$wikidataid))
+
+Professions_melted3 <- Professions_melted3 %>% distinct(wikidataid, .keep_all= TRUE)
+
+length(unique(Professions_melted3$wikidataid))
+length((Professions_melted3$wikidataid))
+
+
+# Research <- c()
+# Science_and_engineering_professionals <- c()
+# Health_professionals <- c()
+# Teaching_professionals <- c()
+# Business_and_administration_professionals <- c()
+# Information_and_communications_technology_professionals <- c()
+# Law <- c()
+# Social_and_cultural_professionals <- c()
+# Administration <- c()
+# Blue.collar.worker <- c()
+# White.collor.worker <- c()
+# others <- c()
+  
 
 # Offices
 Offices <- get_office(legislature = "deu")
@@ -35,6 +142,15 @@ cols_names <- c("wikidataid",
                 #"chairman_of_the_cdu.csu_bundestag_fraction",
 #"chairman_of_the_social_democratic_party",
 "federal_chancellor_of_germany",
+
+"party_leader",
+"president_of_the_bundestag", 
+"sprecher",
+"parliamentary_secretary_in_germany",
+"parliamentary_secretary_in_germany",
+"secretary_general_of_the_cdu", 
+"secretary_general_of_the_spd",
+
 # "federal_minister_for_economic_affairs_and_energy",
 # "federal_minister_for_foreign_affairs",
 # "federal_minister_for_special_affairs_of_germany",
@@ -82,11 +198,26 @@ Offices_sub <- Offices[, cols_names]
 colnames(Offices_sub)
 
 Parties <- subset(Parties, (Parties$session >= 12 & Parties$session <= 19))
-MPs_and_parties <- relevant_MPs[, c("pageid", "wikidataid")] %>% 
-  merge(Parties, by = "pageid", all.x = TRUE) %>% 
-  merge(Offices_sub, by = "wikidataid", all.x = TRUE) 
 
-save(MPs_and_parties, file = "./01_data/Wikipedia/output/MP2Party_CLD.RData")
+colnames(relevant_MPs)
+
+MPs_and_parties <- relevant_MPs[, c("pageid", "wikidataid", "birth")] %>% 
+  merge(Parties, by = "pageid", all.x = TRUE) %>% 
+  merge(Offices_sub, by = "wikidataid", all.x = TRUE) %>% 
+  merge(Professions_melted3, by = "wikidataid", all.x = TRUE)
+
+
+MPs_meta_info <- relevant_MPs[, c( "pageid","wikidataid","wikititle","name","sex","ethnicity","religion","birth")] %>% 
+  merge(Parties, by = "pageid", all.x = TRUE) %>% 
+  merge(Offices_sub, by = "wikidataid", all.x = TRUE) %>% 
+  merge(Professions_melted3, by = "wikidataid", all.x = TRUE)
+
+colnames(MPs_and_parties)
+colnames(MPs_meta_info)
+
+
+#save(MPs_and_parties, file = "./01_data/Wikipedia/output/MP2Party_CLD.RData")
+#save(MPs_meta_info, file = "./01_data/Wikipedia/output/MPs_meta_info.RData")
 
 load(file = "./01_data/Wikipedia/output/MP2Party_CLD.RData")
 

@@ -55,7 +55,15 @@ qplot(c(1:7), wikimeasures_df_fa.pca.ve) +
 dev.off()
 
 
-biplot(wikimeasures_df_fa.pca, scale = 0, cex = 0.6)
+biplot(wikimeasures_df_fa.pca, 
+       scale = 0, 
+       cex = 0.6, 
+       ylim  = c(-3, 3))
 
+?biplot
+
+
+wikimeasures_df_fa.pca
 #
 #wikimeasures_df <- wikimeasures_df[flag_completes,]
+
