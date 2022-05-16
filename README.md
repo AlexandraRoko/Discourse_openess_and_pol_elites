@@ -5,7 +5,7 @@ Code used to do the emperical analysis. This repo is structured in the following
 
 * **1_parliamentary_minutes** (Python): Code used to (1) clean the parliamentary minutes which were available in .xml format, (2) clean and pre-process the speeches, and (2) train an LDA topic model, (3) calculate the KL-divergences of speeches.
 * **2_Wikipeida** (R and Python): Code used to (1) scrate Wikipedia and Wikidata, (2) retrieve historical versions of Wikipedia articles, (3) construct graph, (4) as well as a dataset containing the Wikipedia data as well as meta data about MPs pulled from the comparative legislator database, (5) perform a Principal Component Analysis, and (6) a factor analysis. 
-* **3_combined_dataa** (R and Python): Code used to (1) combine Wikipedia data and KL-based measures, (2) analyse combined data, (3) plot figures.
+* **3_combined_data** (R and Python): Code used to (1) combine Wikipedia data and KL-based measures, (2) analyse combined data, (3) plot figures.
 
 
 ## Script requirements for python scrips
