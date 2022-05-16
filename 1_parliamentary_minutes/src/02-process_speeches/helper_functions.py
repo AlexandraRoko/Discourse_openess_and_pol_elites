@@ -1,3 +1,12 @@
+'''
+------------------------------------------------------------------------
+Script name: helper_functions.py
+Purpose of script: helper functions
+Dependencies: none
+Author: Alexandra Rottenkolber
+------------------------------------------------------------------------
+'''
+
 # packages
 
 import gensim

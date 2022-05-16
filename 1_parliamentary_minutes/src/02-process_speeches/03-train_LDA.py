@@ -1,3 +1,12 @@
+'''
+------------------------------------------------------------------------
+Script name: 03-train_LDA.py
+Purpose of script: train LDA topic model
+Dependencies: 02_apply_text_processing.py
+Author: Alexandra Rottenkolber
+------------------------------------------------------------------------
+'''
+
 from gensim.corpora import Dictionary
 from gensim.models import LdaModel
 import time

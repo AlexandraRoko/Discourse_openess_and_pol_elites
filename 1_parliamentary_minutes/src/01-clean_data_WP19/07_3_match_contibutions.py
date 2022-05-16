@@ -1,3 +1,10 @@
+'''
+------------------------------------------------------------------------
+Script name: 07_3_match_contibutions.py
+Author: Alexandra Rottenkolber based on code from open-discourse (https://github.com/open-discourse/open-discourse)
+------------------------------------------------------------------------
+'''
+
 from helper_functions import (
     insert_politician_id_into_contributions_extended,
 )

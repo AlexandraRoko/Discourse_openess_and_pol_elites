@@ -1,3 +1,11 @@
+'''
+------------------------------------------------------------------------
+Script name: 08_concatenate_everything.py
+Author: Alexandra Rottenkolber based on code from open-discourse (https://github.com/open-discourse/open-discourse)
+------------------------------------------------------------------------
+'''
+
+
 
 import xml.etree.ElementTree as et
 import pandas as pd

@@ -4,8 +4,6 @@ Script name: 02_extract_speeches_from_txt.py
 Purpose of script: parliamentary minutes of WP 19 to text
 Dependencies: 01_xml_to_text.py
 Author: Alexandra Rottenkolber based on code from open-discourse (script 01_extract_speeches.py)
-Date created: 05.03.2022
-Date last modified:
 ------------------------------------------------------------------------
 '''
 

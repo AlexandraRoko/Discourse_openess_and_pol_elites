@@ -1,4 +1,11 @@
-
+'''
+------------------------------------------------------------------------
+Script name: 06_2_match_name_to_speech.py
+Purpose of script: clean text in speeches
+Dependencies: 02_extract_speeches_from_text.py, 03_fractions.py
+Author: Alexandra Rottenkolber based on code from open-discourse (script 02_clean_speeches.py)  (https://github.com/open-discourse/open-discourse)
+------------------------------------------------------------------------
+'''
 
 
 import pandas as pd

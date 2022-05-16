@@ -228,7 +228,8 @@ for windowsize in windowsize_list:
 
 print(f'Time taken : {(time.time() - start_time) / 60:.2f} mins')
 
-with open(PATH + 'processed/speech2KL_lda_model_concat_POSTag_self_tuned_all_without_very_short_speeches.txt',
+with open(PATH + 'processed/speech2KL_lda_model_concat_POSTag_self_tuned_all_sorted.txt',
+with open(PATH + 'processed/speech2KL_lda_model_concat_POSTag_self_tuned_all_sorted.txt',
           'w') as outfile:
     json.dump(speech2KL, outfile)
 outfile.close()

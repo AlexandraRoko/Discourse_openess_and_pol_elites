@@ -1,3 +1,12 @@
+'''
+------------------------------------------------------------------------
+Script name: 01_xml_to_text_WP3-19.py
+Purpose of script: parliamentary minutes of WP 19 to text
+Dependencies: none
+Author: Alexandra Rottenkolber based on code from open-discourse (script 01_extract_speeches.py)
+------------------------------------------------------------------------
+'''
+
 
 import os
 import sys

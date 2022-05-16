@@ -3,10 +3,8 @@
 Script name: 04_1_fractions.py
 Purpose of script:
 Dependencies: 03_mps_from_base.py
-Author: Alexandra Rottenkolber based on code from open-discourse (script 01_create_fractions.py)
+Author: Alexandra Rottenkolber based on code from open-discourse (script 01_create_fractions.py)  (https://github.com/open-discourse/open-discourse)
 Output: fractions.pkl
-Date created: 05.03.2022
-Date last modified:
 ------------------------------------------------------------------------
 '''
 

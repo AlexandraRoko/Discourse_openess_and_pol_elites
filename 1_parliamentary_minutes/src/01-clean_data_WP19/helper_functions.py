@@ -1,3 +1,10 @@
+'''
+------------------------------------------------------------------------
+Script name: helper_functions.py
+Author: Alexandra Rottenkolber based on code from open-discourse (https://github.com/open-discourse/open-discourse)
+------------------------------------------------------------------------
+'''
+
 import numpy as np
 import regex
 

@@ -3,10 +3,8 @@
 Script name: 03_mps_from_base.py
 Purpose of script:
 Dependencies: NONE
-Author: Alexandra Rottenkolber based on code from open-discourse (script 06_extract_mps_from_base_data.py)
+Author: Alexandra Rottenkolber based on code from open-discourse (script 06_extract_mps_from_base_data.py)  (https://github.com/open-discourse/open-discourse)
 Output: mps.pkl
-Date created: 05.03.2022
-Date last modified:
 ------------------------------------------------------------------------
 '''
 

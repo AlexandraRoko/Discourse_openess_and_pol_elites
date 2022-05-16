@@ -3,10 +3,8 @@
 Script name: 04_2_abbreviations_and_ids.py
 Purpose of script:
 Dependencies: 04_1_fractions.py
-Author: Alexandra Rottenkolber based on code from open-discourse (script 02_add_abbreviations_and_ids.py)
+Author: Alexandra Rottenkolber based on code from open-discourse (script 02_add_abbreviations_and_ids.py)  (https://github.com/open-discourse/open-discourse)
 Output: fractions.pkl
-Date created: 05.03.2022
-Date last modified:
 ------------------------------------------------------------------------
 '''
 

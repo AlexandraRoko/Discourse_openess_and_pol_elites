@@ -1,3 +1,10 @@
+'''
+------------------------------------------------------------------------
+Script name: 07_2_clean_contributions.py
+Author: Alexandra Rottenkolber based on code from open-discourse (https://github.com/open-discourse/open-discourse)
+------------------------------------------------------------------------
+'''
+
 from helper_functions import clean_name_headers
 import pandas as pd
 import sys

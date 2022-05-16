@@ -1,3 +1,12 @@
+'''
+------------------------------------------------------------------------
+Script name: 02_apply_text_processing.py
+Purpose of script: text pre-processing
+Dependencies: 01-prepare_data.py, helper_functions.py
+Author: Alexandra Rottenkolber
+------------------------------------------------------------------------
+'''
+
 
 import json
 from helper_functions import stemming, tokenise_n_grams_lemma_spacy_POSTag

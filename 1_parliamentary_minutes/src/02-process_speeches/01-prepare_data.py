@@ -1,3 +1,12 @@
+'''
+------------------------------------------------------------------------
+Script name: 01-prepare_data.py
+Purpose of script: prepare parliamentary minutes
+Dependencies: none
+Author: Alexandra Rottenkolber
+------------------------------------------------------------------------
+'''
+
 import sys
 import csv
 import pandas as pd
