@@ -4,7 +4,7 @@
 Code used to do the empirical analysis of the relationship between political signifiance and the individual agenda setting capacities of different German MPs. This repo is structured in the following way: 
 
 * **1_parliamentary_minutes** (Python): Code used to (1) clean the parliamentary minutes which were available in .xml format, (2) clean and pre-process the speeches, and (2) train an LDA topic model, (3) calculate how much speeches deviate from each other (KL-divergence).
-* **2_Wikipeida** (R and Python): Code used to (1) scrape Wikipedia and Wikidata, (2) retrieve historical versions of Wikipedia articles, (3) construct a directed network, (4) as well as a dataset containing meta infromation on Wikipedia articles as well as meta data about MPs (the latter was pulled from the comparative legislator database), (5) perform a Principal Component Analysis, and (6) a factor analysis. 
+* **2_Wikipedia** (R and Python): Code used to (1) scrape Wikipedia and Wikidata, (2) retrieve historical versions of Wikipedia articles, (3) construct a directed network, (4) as well as a dataset containing meta infromation on Wikipedia articles as well as meta data about MPs (the latter was pulled from the comparative legislator database), (5) perform a Principal Component Analysis, and (6) a factor analysis. 
 * **3_combined_data** (R and Python): Code used to (1) combine Wikipedia data and KL-based measures, (2) analyse combined data statistically, (3) plot figures.
 
 ## Data used
